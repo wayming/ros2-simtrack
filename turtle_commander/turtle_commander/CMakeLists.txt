@@ -1,20 +1,25 @@
 cmake_minimum_required(VERSION 3.8)
 project(turtle_commander)
 
+# 查找必要包
 find_package(ament_cmake REQUIRED)
-find_package(rclpy REQUIRED)
-find_package(std_srvs REQUIRED)
-find_package(geometry_msgs REQUIRED)
-find_package(turtlesim REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
+# 确保包含 Python 生成器
+find_package(rosidl_generator_py REQUIRED)
+
+# 生成接口 - 正确写法
 rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/ResetTurtle.srv"
-  DEPENDENCIES std_msgs
 )
 
+# 安装Python包
 ament_python_install_package(${PROJECT_NAME})
 
-ament_export_dependencies(rosidl_default_runtime)
+# 安装接口
+install(
+  DIRECTORY srv
+  DESTINATION share/${PROJECT_NAME}
+)
 
 ament_package()

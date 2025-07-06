@@ -1,4 +1,0 @@
-[console_scripts]
-commander_node = turtle_commander.commander_node:main
-reset_service_node = turtle_commander.reset_service_node:main
-

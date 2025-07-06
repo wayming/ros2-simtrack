@@ -3,7 +3,7 @@ import rclpy
 from rclpy.node import Node
 from std_srvs.srv import Empty
 from turtlesim.srv import TeleportAbsolute
-from turtle_commander.srv import ResetTurtle
+from .srv import ResetTurtle
 
 class ResetServiceNode(Node):
     def __init__(self):
