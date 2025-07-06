@@ -1,0 +1,6 @@
+{
+  "package_name": "turtle_commander",
+  "non_idl_tuples": [
+    "/ros2_ws/turtle_commander_ws/src/turtle_commander:srv/ResetTurtle.srv"
+  ]
+}

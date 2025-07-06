@@ -1,14 +1,13 @@
 import rclpy
 from rclpy.node import Node
-from std_srvs.srv import Empty
+from turtle_commander.srv import ResetTurtle
 from turtlesim.srv import TeleportAbsolute
 
 class ResetService(Node):
     def __init__(self):
         super().__init__('reset_service')
-        self.srv = self.create_service(Empty, 'reset_turtle', self.reset_callback)
+        self.srv = self.create_service(ResetTurtle, 'reset_turtle', self.reset_callback)
         self.cli = self.create_client(TeleportAbsolute, '/turtle1/teleport_absolute')
-
         while not self.cli.wait_for_service(timeout_sec=1.0):
             self.get_logger().info('Waiting for teleport_absolute service...')
 
@@ -18,7 +17,9 @@ class ResetService(Node):
         req.x = 5.544445
         req.y = 5.544445
         req.theta = 0.0
-        self.cli.call_async(req)
+        future = self.cli.call_async(req)
+        rclpy.spin_until_future_complete(self, future)
+        response.success = future.result() is not None
         return response
 
 def main(args=None):
