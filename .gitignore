@@ -1,5 +1,5 @@
-turtle_commander/build/*
-turtle_commander/install
-turtle_commander/log
+turtle_commander_ws/build/*
+turtle_commander_ws/install
+turtle_commander_ws/log
 
-turtle_commander/build
+turtle_commander_ws/build
