@@ -22,5 +22,7 @@ RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> /root/.bashrc
 # Set working directory
 WORKDIR /ros2_ws
 
+USER 1000
+
 # Default command
 CMD ["tail", "-f", "/dev/null"]
