@@ -19,10 +19,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Source ROS 2 setup.bash in every shell
 RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> /root/.bashrc
 
+RUN useradd -m -s /bin/bash -u 1000 rosuser \
+    && echo "rosuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
 # Set working directory
 WORKDIR /ros2_ws
 
-USER 1000
+USER rosuser
 
 # Default command
 CMD ["tail", "-f", "/dev/null"]
