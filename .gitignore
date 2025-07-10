@@ -1,9 +1,6 @@
-turtle_commander_ws/build/*
+turtle_commander_ws/build
 turtle_commander_ws/install
 turtle_commander_ws/log
-
-turtle_commander_ws/build
-turtle_commander_ws/CMakeFiles/
-turtle_commander_ws/rosidl_adapter/
-turtle_commander_ws/ament_cmake_core/
-turtle_commander_ws/rosidl_cmake/
+turtle_monitor_ws/build/
+turtle_monitor_ws/install/
+turtle_monitor_ws/log/
