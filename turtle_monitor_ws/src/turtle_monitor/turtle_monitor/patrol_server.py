@@ -3,7 +3,7 @@ import rclpy
 from rclpy.action import ActionServer
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
-from turtlebot3_example.action import Patrol
+from turtlebot3_msgs.action import Patrol
 from math import pi
 
 class PatrolServer(Node):
@@ -30,13 +30,13 @@ class PatrolServer(Node):
 
         for i, (x, y, theta) in enumerate(waypoints):
             if goal_handle.is_cancel_requested:
-                result.success = False
+                rresult.result = 'Patrol canceled'
                 return result
-            feedback_msg.current_waypoint = i + 1
+            feedback_msg.state = f'Arrived at waypoint {i + 1}'
             goal_handle.publish_feedback(feedback_msg)
             self.move_to(x, y, theta)
 
-        result.success = True
+        result.result = 'Patrol succeeded'
         return result
 
     def move_to(self, x, y, theta):
