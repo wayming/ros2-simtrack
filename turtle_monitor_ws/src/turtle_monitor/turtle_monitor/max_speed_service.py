@@ -1,7 +1,7 @@
 import rclpy
 from rclpy.node import Node
 from rclpy.parameter import Parameter
-from turtle_monitor.srv import SetMaxSpeed
+from turtle_interfaces.srv import SetMaxSpeed
 
 class MaxSpeedService(Node):
     def __init__(self):

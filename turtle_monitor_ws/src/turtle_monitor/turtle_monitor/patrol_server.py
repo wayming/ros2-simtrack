@@ -14,7 +14,7 @@ class PatrolServer(Node):
         qos_profile = QoSProfile(
             reliability=ReliabilityPolicy.RELIABLE,
             history=HistoryPolicy.KEEP_ALL,
-            durability=DurabilityPolicy.VOLATILE
+            durability=DurabilityPolicy.TRANSIENT_LOCAL
         )
         self._action_server = ActionServer(self, Patrol, 'patrol', self.execute_callback)
         self.cmd_vel_pub = self.create_publisher(TwistStamped, '/cmd_vel', qos_profile=qos_profile)
