@@ -2,22 +2,42 @@
 <package format="3">
   <name>turtle_monitor</name>
   <version>0.1.0</version>
-  <description>Monitor and control TurtleBot3 via ROS 2 mechanisms.</description>
-  <maintainer email="your_email@example.com">Your Name</maintainer>
+  <description>Monitor and control utilities for TurtleBot3 simulation</description>
+
+  <maintainer email="you@example.com">Your Name</maintainer>
   <license>Apache License 2.0</license>
 
+  <!-- Build tools -->
+  <buildtool_depend>ament_cmake</buildtool_depend>
   <buildtool_depend>ament_python</buildtool_depend>
 
+  <!-- Build dependencies -->
+  <build_depend>rosidl_default_generators</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>rcl_interfaces</build_depend>
+  <build_depend>action_msgs</build_depend>
+  <build_depend>turtle_interfaces</build_depend>
+
+  <!-- Runtime dependencies -->
   <exec_depend>rclpy</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
   <exec_depend>std_msgs</exec_depend>
   <exec_depend>sensor_msgs</exec_depend>
   <exec_depend>nav_msgs</exec_depend>
-  <exec_depend>geometry_msgs</exec_depend>
   <exec_depend>std_srvs</exec_depend>
-  <exec_depend>rcl_interfaces</exec_depend>
   <exec_depend>action_msgs</exec_depend>
+  <exec_depend>turtle_interfaces</exec_depend>
+
+  <!-- Interface grouping -->
+  <member_of_group>rosidl_interface_packages</member_of_group>
+
+  <!-- Python launch and entry points -->
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
 
   <export>
     <build_type>ament_python</build_type>
+    <launch_file>launch</launch_file>
   </export>
 </package>

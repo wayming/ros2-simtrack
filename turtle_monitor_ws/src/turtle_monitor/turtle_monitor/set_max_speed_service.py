@@ -1,37 +1,43 @@
 import rclpy
 from rclpy.node import Node
-from std_srvs.srv import SetBool
-from rcl_interfaces.msg import Parameter
-from geometry_msgs.msg import Twist
+from rclpy.parameter import Parameter
+from turtle_monitor.srv import SetMaxSpeed
 
 class MaxSpeedService(Node):
     def __init__(self):
         super().__init__('max_speed_service')
         self.declare_parameter('max_speed', 0.2)
-        self.max_speed = self.get_parameter('max_speed').get_parameter_value().double_value
-        self.set_max_speed_srv = self.create_service(
-            SetBool,
-            '/set_max_speed',
-            self.set_max_speed_callback)
+        self.max_speed = self.get_parameter('max_speed').value
+
+        self.srv = self.create_service(SetMaxSpeed, 'set_max_speed', self.set_max_speed_callback)
+        self.add_on_set_parameters_callback(self.parameter_callback)
+        self.get_logger().info(f"Initial max speed: {self.max_speed}")
 
     def set_max_speed_callback(self, request, response):
-        if request.data:
-            self.max_speed = 0.5
-            self.get_logger().info('Max speed set to 0.5 m/s')
-        else:
-            self.max_speed = 0.2
-            self.get_logger().info('Max speed set to 0.2 m/s')
+        if request.max_speed <= 0.0:
+            response.success = False
+            response.message = "Speed must be positive"
+            return response
+
+        self.max_speed = request.max_speed
+        self.set_parameters([Parameter('max_speed', Parameter.Type.DOUBLE, self.max_speed)])
         response.success = True
-        response.message = f'Max speed set to {self.max_speed} m/s'
+        response.message = f"Max speed set to {self.max_speed}"
+        self.get_logger().info(response.message)
         return response
+
+    def parameter_callback(self, params):
+        for param in params:
+            if param.name == 'max_speed' and param.type_ == Parameter.Type.DOUBLE:
+                self.max_speed = param.value
+                self.get_logger().info(f"Max speed parameter updated to: {self.max_speed}")
+        return rclpy.parameter.SetParametersResult(successful=True)
 
 def main(args=None):
     rclpy.init(args=args)
-    max_speed_service = MaxSpeedService()
-    rclpy.spin(max_speed_service)
-    max_speed_service.destroy_node()
+    node = MaxSpeedService()
+    rclpy.spin(node)
     rclpy.shutdown()
 
 if __name__ == '__main__':
     main()
-
