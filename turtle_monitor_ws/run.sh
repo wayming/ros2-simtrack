@@ -3,8 +3,8 @@ git clone -b jazzy https://github.com/ROBOTIS-GIT/turtlebot3_msgs.git src/turtle
 git clone -b jazzy https://github.com/ROBOTIS-GIT/turtlebot3.git src/turtlebot3
 git clone -b jazzy https://github.com/ROBOTIS-GIT/turtlebot3_simulations.git src/turtlebot3_simulations
 
-ps -ef|grep ros2 |awk '{print $2}' | xargs kill -SIGINT
 rm -rf build install log
+ps -ef|grep ros2 |awk '{print $2}' | xargs kill -SIGINT
 colcon build
 source /opt/ros/jazzy/setup.bash
 source install/setup.bash

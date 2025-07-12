@@ -1,16 +1,23 @@
 import rclpy
 from rclpy.action import ActionServer
 from rclpy.node import Node
-from geometry_msgs.msg import Twist, Vector3
+from geometry_msgs.msg import TwistStamped, Vector3
 from turtle_interfaces.action import Patrol
 from math import pi
 import time
 
+from rclpy.qos import QoSProfile, ReliabilityPolicy, HistoryPolicy, DurabilityPolicy
+
 class PatrolServer(Node):
     def __init__(self):
         super().__init__('patrol_server')
+        qos_profile = QoSProfile(
+            reliability=ReliabilityPolicy.RELIABLE,
+            history=HistoryPolicy.KEEP_ALL,
+            durability=DurabilityPolicy.VOLATILE
+        )
         self._action_server = ActionServer(self, Patrol, 'patrol', self.execute_callback)
-        self.cmd_vel_pub = self.create_publisher(Twist, '/cmd_vel', 10)
+        self.cmd_vel_pub = self.create_publisher(TwistStamped, '/cmd_vel', qos_profile=qos_profile)
         self.get_logger().info('Patrol Server Initialized')
 
     def execute_callback(self, goal_handle):
@@ -32,6 +39,7 @@ class PatrolServer(Node):
 
             feedback_msg.state = f'Arrived at waypoint {i + 1}'
             goal_handle.publish_feedback(feedback_msg)
+            self.get_logger().info(f'move_to ({x}, {y}, {theta})')
             self.move_to(x, y, theta)
             self.get_logger().info(feedback_msg.state)
 
@@ -40,20 +48,24 @@ class PatrolServer(Node):
         return result
 
     def move_to(self, x, y, theta, duration=2.0):
-        twist = Twist()
-        twist.linear.x = x
-        twist.linear.y = y
-        twist.angular.z = theta
+        twist_stamped = TwistStamped()
+        twist_stamped.twist.linear.x = x
+        twist_stamped.twist.linear.y = y
+        twist_stamped.twist.angular.z = theta
 
         start_time = time.time()
-        rate = self.create_rate(10, self.get_clock())  # 10 Hz
-
         while time.time() - start_time < duration:
-            self.cmd_vel_pub.publish(twist)
-            rate.sleep()
+            # 更新时间戳
+            twist_stamped.header.stamp = self.get_clock().now().to_msg()
+            twist_stamped.header.frame_id = "base_footprint"  # 你可以根据实际情况设置frame_id
+            self.cmd_vel_pub.publish(twist_stamped)
+            time.sleep(0.1)
 
         # 停止移动
-        self.cmd_vel_pub.publish(Twist())  # all zeros
+        stop_msg = TwistStamped()
+        stop_msg.header.stamp = self.get_clock().now().to_msg()
+        stop_msg.header.frame_id = "base_footprint"
+        self.cmd_vel_pub.publish(stop_msg)
 
 def main(args=None):
     rclpy.init(args=args)
