@@ -1,6 +1,7 @@
 import rclpy
 from rclpy.node import Node
 from rclpy.parameter import Parameter
+from rcl_interfaces.msg import SetParametersResult
 from turtle_interfaces.srv import SetMaxSpeed
 
 class MaxSpeedService(Node):
@@ -31,7 +32,7 @@ class MaxSpeedService(Node):
             if param.name == 'max_speed' and param.type_ == Parameter.Type.DOUBLE:
                 self.max_speed = param.value
                 self.get_logger().info(f"Max speed parameter updated to: {self.max_speed}")
-        return rclpy.parameter.SetParametersResult(successful=True)
+        return SetParametersResult(successful=True)
 
 def main(args=None):
     rclpy.init(args=args)
