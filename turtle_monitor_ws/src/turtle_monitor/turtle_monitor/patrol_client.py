@@ -3,6 +3,7 @@ from rclpy.action import ActionClient
 from rclpy.node import Node
 from turtle_interfaces.action import Patrol
 from geometry_msgs.msg import Vector3
+from math import pi
 
 class PatrolClient(Node):
     def __init__(self):
@@ -16,9 +17,19 @@ class PatrolClient(Node):
         goal_msg = Patrol.Goal()
         goal_msg.goal = Vector3(x=1.0, y=0.0, z=0.0)  # 示例传目标
 
-        self.get_logger().info('Sending patrol goal...')
-        self._send_goal_future = self._action_client.send_goal_async(goal_msg, feedback_callback=self.feedback_callback)
-        self._send_goal_future.add_done_callback(self.goal_response_callback)
+        waypoints = [
+            Vector3(x=1.0, y=0.0, z=0.0),
+            Vector3(x=0.0, y=1.0, z=pi/2),
+            Vector3(x=-1.0, y=0.0, z=pi),
+            Vector3(x=0.0, y=-1.0, z=-pi/2)
+        ]
+        
+        for i, waypoint in enumerate(waypoints):
+            goal_msg.goal = waypoint
+            self.get_logger().info(f'Waypoint {i + 1}: {waypoint.x}, {waypoint.y}, {waypoint.z}')
+            self.get_logger().info('Sending patrol goal...')
+            self._send_goal_future = self._action_client.send_goal_async(goal_msg, feedback_callback=self.feedback_callback)
+            self._send_goal_future.add_done_callback(self.goal_response_callback)
 
     def goal_response_callback(self, future):
         goal_handle = future.result()

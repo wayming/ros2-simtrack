@@ -24,24 +24,18 @@ class PatrolServer(Node):
         feedback_msg = Patrol.Feedback()
         result = Patrol.Result()
 
-        waypoints = [
-            (1.0, 0.0, 0.0),
-            (0.0, 1.0, pi/2),
-            (-1.0, 0.0, pi),
-            (0.0, -1.0, -pi/2)
-        ]
+        if goal_handle.is_cancel_requested:
+            result.result = "Patrol canceled"
+            goal_handle.canceled()
+            return result
 
-        for i, (x, y, theta) in enumerate(waypoints):
-            if goal_handle.is_cancel_requested:
-                result.result = "Patrol canceled"
-                goal_handle.canceled()
-                return result
-
-            feedback_msg.state = f'Arrived at waypoint {i + 1}'
-            goal_handle.publish_feedback(feedback_msg)
-            self.get_logger().info(f'move_to ({x}, {y}, {theta})')
-            self.move_to(x, y, theta)
-            self.get_logger().info(feedback_msg.state)
+        goal_msg = goal_handle.request.goal
+        feedback_msg.state = f'Arrived at waypoint {goal_msg}'
+        
+        goal_handle.publish_feedback(feedback_msg)
+        self.get_logger().info(f'move_to ({goal_msg.x}, {goal_msg.y}, {goal_msg.z})')
+        self.move_to(goal_msg.x, goal_msg.y, goal_msg.z)
+        self.get_logger().info(feedback_msg.state)
 
         result.result = "Patrol completed successfully"
         goal_handle.succeed()
@@ -57,7 +51,7 @@ class PatrolServer(Node):
         while time.time() - start_time < duration:
             # 更新时间戳
             twist_stamped.header.stamp = self.get_clock().now().to_msg()
-            twist_stamped.header.frame_id = "base_footprint"  # 你可以根据实际情况设置frame_id
+            twist_stamped.header.frame_id = "base_footprint"
             self.cmd_vel_pub.publish(twist_stamped)
             time.sleep(0.1)
 
