@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>turtle_autonomous_patrol</name>
+  <version>0.0.1</version>
+  <description>Autonomous patrol robot using TurtleBot3 in Gazebo with Lidar-based obstacle avoidance and camera-based visual feedback.</description>
+
+  <maintainer email="you@example.com">Your Name</maintainer>
+  <license>Apache License 2.0</license>
+
+  <!-- 依赖 -->
+  <buildtool_depend>ament_python</buildtool_depend>
+
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>cv_bridge</exec_depend>
+  <exec_depend>image_transport</exec_depend>
+  <exec_depend>builtin_interfaces</exec_depend>
+  <exec_depend>turtle_interfaces</exec_depend>
+
+  <!-- Interface grouping -->
+  <member_of_group>rosidl_interface_packages</member_of_group>
+
+  <!-- 依赖于 TurtleBot3 仿真和 Gazebo 环境 -->
+  <exec_depend>gazebo_ros</exec_depend>
+  <exec_depend>turtlebot3_gazebo</exec_depend>
+  <exec_depend>turtlebot3_msgs</exec_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

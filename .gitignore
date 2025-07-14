@@ -4,3 +4,6 @@ turtle_commander_ws/log
 turtle_monitor_ws/build/
 turtle_monitor_ws/install/
 turtle_monitor_ws/log/
+turtle_autonomous_patrol_ws/build/
+turtle_autonomous_patrol_ws/install/
+turtle_autonomous_patrol_ws/log/

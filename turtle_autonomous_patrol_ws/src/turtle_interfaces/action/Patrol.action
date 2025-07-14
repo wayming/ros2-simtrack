@@ -1,0 +1,10 @@
+# Goal definition
+geometry_msgs/Vector3 goal
+
+---
+# Result definition
+string result
+
+---
+# Feedback definition
+string state
