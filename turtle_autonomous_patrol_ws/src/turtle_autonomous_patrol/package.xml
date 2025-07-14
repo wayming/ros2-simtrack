@@ -10,6 +10,8 @@
   <!-- 依赖 -->
   <buildtool_depend>ament_python</buildtool_depend>
 
+  <build_depend>turtle_interfaces</build_depend>
+  
   <exec_depend>rclpy</exec_depend>
   <exec_depend>sensor_msgs</exec_depend>
   <exec_depend>geometry_msgs</exec_depend>
