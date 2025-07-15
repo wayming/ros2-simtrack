@@ -1,0 +1,8 @@
+laser_avoider:
+  ros__parameters:
+    forward_speed: 0.2
+    turn_speed: 0.5
+    obstacle_distance: 0.5
+camera:
+  ros__parameters:
+    warning_distance : 0.5

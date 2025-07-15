@@ -1,3 +1,4 @@
+import os
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription, RegisterEventHandler, TimerAction
 from launch.event_handlers import OnProcessStart
@@ -5,6 +6,7 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
+from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
 
@@ -21,26 +23,14 @@ def generate_launch_description():
     patrol_laster_avoider = Node(
         package='turtle_autonomous_patrol',
         executable='laser_avoider',
-        output='screen'
+        output='screen',
+        parameters=[
+            os.path.join(get_package_share_directory('turtle_autonomous_patrol'), 'config', 'params.yaml')],
     )
 
     patrol_camera_alert = Node(
         package='turtle_autonomous_patrol',
         executable='camera_alert',
-        output='screen'
-    )
-
-    patrol_server_node = Node(
-        package='turtle_autonomous_patrol',
-        executable='patrol_server',
-        name='patrol_server',
-        output='screen'
-    )
-
-    patrol_client_node = Node(
-        package='turtle_autonomous_patrol',
-        executable='patrol_client',
-        name='patrol_client',
         output='screen'
     )
 
@@ -53,7 +43,6 @@ def generate_launch_description():
             actions=[
                 patrol_laster_avoider,
                 patrol_camera_alert,
-                patrol_server_node,
             ]
         ),
         
