@@ -36,6 +36,8 @@ RUN apt-get install -y ros-jazzy-cartographer ros-jazzy-cartographer-ros
 # Install Navigation2
 RUN apt-get install -y ros-jazzy-navigation2 ros-jazzy-nav2-bringup
 
+RUN apt-get install -y ros-jazzy-tf2-ros ros-jazzy-tf2-geometry-msgs ros-jazzy-tf-transformations
+
 # Colcon common extensions  
 RUN apt-get install python3-colcon-common-extensions
 
