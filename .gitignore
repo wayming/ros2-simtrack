@@ -7,3 +7,4 @@ turtle_monitor_ws/log/
 turtle_autonomous_patrol_ws/build/
 turtle_autonomous_patrol_ws/install/
 turtle_autonomous_patrol_ws/log/
+turtle_autonomous_patrol_ws/src/turtle_autonomous_patrol/turtle_autonomous_patrol/__pycache__

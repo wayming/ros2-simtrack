@@ -6,14 +6,24 @@ from nav_msgs.msg import Odometry
 from geometry_msgs.msg import TwistStamped
 from tf_transformations import euler_from_quaternion
 from rclpy.duration import Duration
+from enum import Enum
+from math import pi
 import random
 
+class State(Enum):
+    FORWARD = 1
+    TURNING = 2
+    BLOCKING = 3
+
+EPSILON = 1e-3
+
+# Define the LaserAvoider class that will handle laser scan data and control the robot
 class LaserAvoider(Node):
     def __init__(self):
         super().__init__('laser_avoider')
         
         # Declare parameters with default values
-        self.declare_parameter('forward_speed', 0.1)
+        self.declare_parameter('forward_speed', 0.3)
         self.declare_parameter('turn_speed', 0.5)
         self.declare_parameter('obstacle_distance', 0.5)
         self.forward_speed = self.get_parameter('forward_speed').value
@@ -26,6 +36,8 @@ class LaserAvoider(Node):
         self.current_angular_velocity_z = 0.0
         
         self.turn_start_time = self.get_clock().now()
+        self.turn_start_yaw = 0.0
+        self.state = State.FORWARD
         
         
     def scan_callback(self, msg):
@@ -56,26 +68,29 @@ class LaserAvoider(Node):
         
         twist_stamped = TwistStamped()
         twist_stamped.header.stamp = self.get_clock().now().to_msg()
-        
+
+        if self.state == State.TURNING and abs(self.current_yaw - self.turn_start_yaw) < pi / 4:
+            self.get_logger().info("Already turning, maintaining turn speed.")
+            return
+
         self.get_logger().info(f"Minimum front distance: {min_front:.2f} m")
         if min_front < self.obstacle_distance:
-            if abs(self.current_angular_velocity_z) > 0.1:
-                if self.get_clock().now() - self.turn_start_time > Duration(seconds=5):
-                    twist_stamped.twist.linear.x = 0.0
-                    twist_stamped.twist.angular.z = self.turn_speed * 100
-                    self.turn_start_time = self.get_clock().now()
-                    self.get_logger().info("Blocking too long, hard turning...")
-                else:
-                    self.get_logger().info("Already turning, maintaining turn speed.")
-
-            else:
-                self.get_logger().info("Obstacle detected! Turning...")
-                twist_stamped.twist.linear.x = 0.0
-                twist_stamped.twist.angular.z = self.turn_speed * random.choice([-1, 1])  # Randomly turn left or right
-                self.turn_start_time = self.get_clock().now()
+            self.get_logger().info("Obstacle detected! Start to turn...")
+            twist_stamped.twist.linear.x = 0.0
+            twist_stamped.twist.angular.z = self.turn_speed * random.choice([-1, 1])  # Randomly turn left or right
+            self.turn_start_time = self.get_clock().now()
+            self.state = State.TURNING
+            self.turn_start_yaw = self.current_yaw
         else:
-            twist_stamped.twist.linear.x = self.forward_speed
-            twist_stamped.twist.angular.z = 0.1
+            if abs(self.current_angular_velocity_z) > EPSILON:
+                self.get_logger().info("Defer moving forward.")
+                twist_stamped.twist.linear.x = 0.0
+                twist_stamped.twist.angular.z = 0.0
+                self.state = State.FORWARD # set the state but waiting angular_velocity_z to 0
+            else:
+                twist_stamped.twist.linear.x = self.forward_speed
+                twist_stamped.twist.angular.z = 0.0
+                self.state = State.FORWARD
 
         self.cmd_pub.publish(twist_stamped)
 
@@ -83,11 +98,11 @@ class LaserAvoider(Node):
     def odom_callback(self, msg):
         # Update the current angular velocity from odometry
         self.current_angular_velocity_z = msg.twist.twist.angular.z
-        self.get_logger().info(f"Current angular velocity (z): {self.current_angular_velocity_z:.3f} rad/s")
+        self.get_logger().debug(f"Current angular velocity (z): {self.current_angular_velocity_z:.3f} rad/s")
         
         orientation = msg.pose.pose.orientation
         roll, pitch, yaw = euler_from_quaternion([orientation.x, orientation.y, orientation.z, orientation.w])
-        self.get_logger().info(f"Current orientation (roll, pitch, yaw): ({roll:.3f}, {pitch:.3f}, {yaw:.3f}) rad")
+        self.get_logger().debug(f"Current orientation (roll, pitch, yaw): ({roll:.3f}, {pitch:.3f}, {yaw:.3f}) rad")
         self.current_yaw = yaw
         
 def main():

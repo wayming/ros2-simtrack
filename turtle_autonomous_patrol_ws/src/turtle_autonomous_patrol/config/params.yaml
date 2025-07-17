@@ -1,6 +1,6 @@
 laser_avoider:
   ros__parameters:
-    forward_speed: 0.1
+    forward_speed: 0.3
     turn_speed: 0.5
     obstacle_distance: 0.5
 camera:
