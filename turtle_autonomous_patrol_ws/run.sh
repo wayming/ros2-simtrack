@@ -5,7 +5,7 @@ git clone -b jazzy https://github.com/ROBOTIS-GIT/turtlebot3_simulations.git src
 
 rm -rf build install log
 ps -ef|grep ros2 |awk '{print $2}' | xargs kill -SIGINT
-colcon build --symlink-install
+colcon build
 source /opt/ros/jazzy/setup.bash
 source install/setup.bash
 export TURTLEBOT3_MODEL=burger
