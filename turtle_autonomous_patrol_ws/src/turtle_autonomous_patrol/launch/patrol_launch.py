@@ -41,16 +41,8 @@ def generate_launch_description():
         TimerAction(
             period=5.0,  # 延迟5秒
             actions=[
-<<<<<<< HEAD
-                robot_state_publisher_node,
-                spawn_entity,
-                ros_gz_bridge_camera,
-                # patrol_laster_avoider,
-                # patrol_camera_alert,
-=======
                 patrol_laster_avoider,
                 patrol_camera_alert,
->>>>>>> parent of f6724d4 (custom model)
             ]
         ),
         
