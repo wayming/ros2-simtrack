@@ -11,12 +11,15 @@ from ament_index_python.packages import get_package_share_directory
 def generate_launch_description():
 
     # 获取turtlebot3_description包的路径
-    tb3_description_path = get_package_share_directory('turtlebot3_description')
-    # 正确设置Gazebo资源路径（使用冒号分隔）
-    current_path = os.environ.get("GZ_SIM_RESOURCE_PATH", "")
-    new_path = f"{current_path}:{tb3_description_path}" if current_path else tb3_description_path
-    os.environ["GZ_SIM_RESOURCE_PATH"] = new_path
+    turtlebot3_desc_path = get_package_share_directory('turtlebot3_description') + "/.."
+
+    path = os.environ.get("GZ_SIM_RESOURCE_PATH", "")
+    os.environ["GZ_SIM_RESOURCE_PATH"] = path + ":" + turtlebot3_desc_path if path else turtlebot3_desc_path
     print("Current GZ_SIM_RESOURCE_PATH:", os.environ["GZ_SIM_RESOURCE_PATH"])
+
+    # path = os.environ.get("GAZEBO_MODEL_PATH", "")
+    # os.environ["GAZEBO_MODEL_PATH"] = path + ":" + turtlebot3_desc_path if path else turtlebot3_desc_path
+    # print("Current GAZEBO_MODEL_PATH:", os.environ["GAZEBO_MODEL_PATH"])
     
     # 路径
     pkg_turtlebot3_gazebo = get_package_share_directory('turtlebot3_gazebo')
@@ -55,19 +58,15 @@ def generate_launch_description():
         output='screen'
     )
 
-    # 启动激光避障节点
-    patrol_laser_avoider = Node(
-        package='turtle_autonomous_patrol',
-        executable='laser_avoider',
+    ros_gz_bridge_camera = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        name='ros_gz_camera_bridge',
         output='screen',
-        parameters=[os.path.join(pkg_turtle_autonomous_patrol, 'config', 'params.yaml')],
-    )
-
-    # 启动摄像头警报节点
-    patrol_camera_alert = Node(
-        package='turtle_autonomous_patrol',
-        executable='camera_alert',
-        output='screen'
+        arguments=[
+            '/camera/image_raw@sensor_msgs/msg/Image@gz.msgs.Image',
+            '/camera/camera_info@sensor_msgs/msg/CameraInfo@gz.msgs.CameraInfo'
+        ]
     )
 
     patrol_laster_avoider = Node(
@@ -93,6 +92,7 @@ def generate_launch_description():
             actions=[
                 robot_state_publisher_node,
                 spawn_entity,
+                ros_gz_bridge_camera,
                 # patrol_laster_avoider,
                 # patrol_camera_alert,
             ]

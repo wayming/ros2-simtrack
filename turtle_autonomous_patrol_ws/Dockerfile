@@ -44,16 +44,23 @@ RUN apt-get install python3-colcon-common-extensions
 WORKDIR /ros2_ws
 RUN . /opt/ros/jazzy/setup.sh && colcon build --symlink-install
 
-# Create group if not exists, then user
-RUN if ! getent group $HOST_GID >/dev/null; then \
-        groupadd -g $HOST_GID hostgroup; \
-    fi && \
-    if ! id -u $HOST_UID >/dev/null 2>&1; then \
-        useradd -m -u $HOST_UID -g $HOST_GID appuser \
-        mkdir -p /home/appuser && \
-        chown $HOST_UID:$HOST_GID /home/appuser; \
+# Create user/group only if UID/GID don't exist
+RUN set -eux; \
+    if getent passwd "$HOST_UID" >/dev/null; then \
+        EXISTING_USER=$(getent passwd "$HOST_UID" | cut -d: -f1); \
+        echo "User with UID $HOST_UID already exists: $EXISTING_USER"; \
+        echo "$EXISTING_USER ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/$EXISTING_USER; \
+        chmod 0440 /etc/sudoers.d/$EXISTING_USER; \
+    else \
+        if ! getent group "$HOST_GID" >/dev/null; then \
+            groupadd -g "$HOST_GID" hostgroup; \
+        fi; \
+        useradd -m -u "$HOST_UID" -g "$HOST_GID" -s /bin/bash "$HOST_USER"; \
+        echo "$HOST_USER ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/$HOST_USER; \
+        chmod 0440 /etc/sudoers.d/$HOST_USER; \
     fi
 
+# Set the user and group for the container
 USER $HOST_UID:$HOST_GID
 
 RUN echo 'export ROS_DOMAIN_ID=30 #TURTLEBOT3' >> ~/.bashrc && \

@@ -23,3 +23,10 @@ ros2 param set /max_speed_service max_speed 0.7
 ros2 topic pub /cmd_vel geometry_msgs/msg/TwistStamped "{header: {stamp: {sec: 0, nanosec: 0}, frame_id: ''}, twist: {linear: {x: 0.2, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.0}}}"拓展：
 
 ros2 launch turtle_autonomous_patrol patrol_launch.py
+GAZEBO_MODEL_PATH=:/ros2_ws/turtle_autonomous_patrol_ws/install/turtlebot3_description/share/turtlebot3_description ros2 launch turtle_autonomous_patrol patrol_launch.py
+export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:/ros2_ws/turtle_autonomous_patrol_ws/install/turtlebot3_description/share/turtlebot3_description 
+
+ export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:/ros2_ws/turtle_autonomous_patrol_ws/install/turtlebot3_description/share/
+ export GZ_SIM_RESOURCE_PATH=$GZ_SIM_RESOURCE_PATH:/ros2_ws/turtle_autonomous_patrol_ws/install/turtlebot3_description/share/
+
+ros2 launch turtle_autonomous_patrol patrol_launch.py
