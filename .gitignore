@@ -11,3 +11,7 @@ turtle_autonomous_patrol_ws/src/turtle_autonomous_patrol/turtle_autonomous_patro
 mini_spawn_demo_ws/build
 mini_spawn_demo_ws/install
 mini_spawn_demo_ws/log
+waffle_tf2_nav_ws/build
+waffle_tf2_nav_ws/install
+waffle_tf2_nav_ws/log
+waffle_tf2_nav_ws/frames_*

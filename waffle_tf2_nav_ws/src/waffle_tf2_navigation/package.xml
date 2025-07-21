@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>waffle_tf2_navigation</name>
+  <version>0.1.0</version>
+  <description>TF2 framework for TurtleBot3 Waffle in Gazebo with perception sensors</description>
+  <maintainer email="you@example.com">you</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>ament_python</buildtool_depend>
+
+  <depend>rclpy</depend>
+  <depend>tf2_ros</depend>
+  <depend>geometry_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>visualization_msgs</depend>
+  <depend>turtlebot3_description</depend>
+  <depend>gazebo_ros</depend>
+
+  <exec_depend>rviz2</exec_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

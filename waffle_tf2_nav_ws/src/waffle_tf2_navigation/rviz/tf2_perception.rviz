@@ -1,0 +1,21 @@
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Name: TF
+      Class: rviz_default_plugins/TF
+    - Name: LaserScan
+      Class: rviz_default_plugins/LaserScan
+      Topic: /scan
+    - Name: Camera
+      Class: rviz_default_plugins/Camera
+      Image Topic: /camera/image_raw
+      Color Transformer: rgb8
+    - Name: RobotModel
+      Class: rviz_default_plugins/RobotModel
+      Description Source: Topic
+      Description Topic: /robot_description
+      Visual Enabled: true
+      Collision Enabled: false
+      Alpha: 1.0
+  Global Options:
+    Fixed Frame: world

@@ -45,6 +45,8 @@ RUN apt-get install -y ~nros-jazzy-rqt*
 
 RUN apt-get install ros-jazzy-turtlesim
 
+RUN apt-get install ros-jazzy-rviz2
+
 WORKDIR /ros2_ws
 RUN . /opt/ros/jazzy/setup.sh && colcon build --symlink-install
 
@@ -69,7 +71,7 @@ USER $HOST_UID:$HOST_GID
 
 RUN echo 'export ROS_DOMAIN_ID=30 #TURTLEBOT3' >> ~/.bashrc && \
     echo 'source /opt/ros/jazzy/setup.bash' >> ~/.bashrc && \
-    echo 'source /ros2_ws/turtle_autonomous_patrol_ws/install/setup.bash' >> ~/.bashrc
+    echo 'source /ros2_ws/waffle_tf2_nav_ws/waffle_tf2_navigation/install/setup.bash' >> ~/.bashrc
 
 
 # Default command
