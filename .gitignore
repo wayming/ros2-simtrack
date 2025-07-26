@@ -8,6 +8,7 @@ turtle_autonomous_patrol_ws/build/
 turtle_autonomous_patrol_ws/install/
 turtle_autonomous_patrol_ws/log/
 turtle_autonomous_patrol_ws/src/turtle_autonomous_patrol/turtle_autonomous_patrol/__pycache__
+turtle_autonomous_patrol_ws/rosbag*
 mini_spawn_demo_ws/build
 mini_spawn_demo_ws/install
 mini_spawn_demo_ws/log
