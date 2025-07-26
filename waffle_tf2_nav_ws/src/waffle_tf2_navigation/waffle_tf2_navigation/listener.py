@@ -12,8 +12,8 @@ class CameraTfListener(Node):
 
     def print_tf(self):
         try:
-            t = self.buffer.lookup_transform('camera_link', 'base_link', rclpy.time.Time())
-            self.get_logger().info(f"TF camera_link→base_link: "
+            t = self.buffer.lookup_transform('base_link', 'odom', rclpy.time.Time())
+            self.get_logger().info(f"TF base_link→odom: "
                                    f"x={t.transform.translation.x:.2f}, "
                                    f"y={t.transform.translation.y:.2f}, "
                                    f"z={t.transform.translation.z:.2f}")
