@@ -24,6 +24,7 @@ setup(
             'static_broadcaster = waffle_tf2_navigation.static_broadcaster:main',
             'listener = waffle_tf2_navigation.listener:main',
             'tf_debugger = waffle_tf2_navigation.tf_debugger:main',
+            'camera_warning = waffle_tf2_navigation.camera_warning:main',
         ],
     },
 )

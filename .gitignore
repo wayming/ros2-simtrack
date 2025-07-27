@@ -16,3 +16,4 @@ waffle_tf2_nav_ws/build
 waffle_tf2_nav_ws/install
 waffle_tf2_nav_ws/log
 waffle_tf2_nav_ws/frames_*
+waffle_tf2_nav_ws/src/waffle_tf2_navigation/waffle_tf2_navigation/__pycache__/*

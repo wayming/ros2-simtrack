@@ -71,10 +71,18 @@ def generate_launch_description():
         output='screen'
     )
 
+    camera_node = Node(
+        package='waffle_tf2_navigation',
+        executable='camera_warning',
+        name='camera_warning',
+        output='screen'
+    )
+
     return LaunchDescription([
         namespace_arg,
         gazebo_launch,
         TimerAction(period=5.0, actions=[robot_state_publisher_node]),
+        TimerAction(period=5.0, actions=[camera_node]),
         TimerAction(period=8.0, actions=[static_broadcaster_node]),
         TimerAction(period=11.0, actions=[listener_node]),
         TimerAction(period=13.0, actions=[rviz_node]),
